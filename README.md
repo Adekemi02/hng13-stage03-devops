@@ -9,15 +9,15 @@ Nginx dynamically proxies requests to either the **Blue** or **Green** container
 
 ---
 
+## Image
+
+<img width="1826" height="814" alt="image" src="https://github.com/user-attachments/assets/64b71d44-ae95-4195-bcef-884b96067177" />
+
+---
+
 ## Project Structure
 
-├── docker-compose.yml
-├── nginx.conf.template
-├── Dockerfile
-├── .gitignore
-├── .env
-├── envsubst.sh
-└── README.md
+<img width="264" height="194" alt="image" src="https://github.com/user-attachments/assets/9a9303c9-df69-492a-bbb2-f881b7df276f" />
 
 ---
 
