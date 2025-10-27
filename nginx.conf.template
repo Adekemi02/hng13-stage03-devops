@@ -1,0 +1,40 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream app_backend {
+        server blue_env:${PORT} max_fails=2 fail_timeout=5s;
+        server green_env:${PORT} backup;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://app_backend;
+            
+            # Retry policy
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_next_upstream_tries 2;
+
+            # Timeout settings
+            proxy_connect_timeout 2s;
+            proxy_send_timeout 2s;
+            proxy_read_timeout 3s;
+
+            # proxy_pass_request_headers on;
+
+            proxy_set_header X-App-Pool $http_x_app_pool;
+            proxy_set_header X-Release-Id $http_x_release_id;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            proxy_pass_header X-App-Pool;
+            proxy_pass_header X-Release-Id;
+        }
+
+    }
+}

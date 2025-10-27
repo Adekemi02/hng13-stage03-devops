@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  
+  nginx:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - PORT=${PORT}
+    depends_on:
+      - blue_env
+      - green_env
+    networks:
+      - app-network
+
+  blue_env:
+    image: ${BLUE_IMAGE}
+    ports:
+      - "8081:${PORT}" 
+    environment:
+      - APP_POOL=blue
+      - RELEASE_ID=${RELEASE_ID_BLUE}
+      - PORT=${PORT}
+    networks:
+      - app-network
+
+  green_env:
+    image: ${GREEN_IMAGE}
+    ports:
+      - "8082:${PORT}" 
+    environment:
+      - APP_POOL=green
+      - RELEASE_ID=${RELEASE_ID_GREEN}
+      - PORT=${PORT}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
