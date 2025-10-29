@@ -4,7 +4,7 @@ events {
 
 http {
     upstream app_backend {
-        server blue_env:${PORT} max_fails=2 fail_timeout=5s;
+        server blue_env:${PORT} max_fails=2 fail_timeout=2s;
         server green_env:${PORT} backup;
     }
 
