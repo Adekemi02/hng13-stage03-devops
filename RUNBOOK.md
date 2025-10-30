@@ -5,6 +5,8 @@
 
 This document provides operational guidance for the Blue/Green Node.js deployment and its monitoring system. It explains how to respond to alerts, perform maintenance, and troubleshoot common issues.
 
+**Note:** To run the project, navigate to the [README.md](https://github.com/Adekemi02/hng13-stage03-devops/blob/main/README.md) for setup and execution instructions.
+
 ---
 
 ## System Overview
@@ -73,7 +75,7 @@ This section explains the automated alerts you will receive in your dedicated Sl
     *   If only one pool is affected, follow the same investigation steps as the Failover Alert.
     *   If **both** pools are affected, this indicates a systemic issue (e.g., database connectivity problem, bad deployment, shared dependency failure).
 4.  **Mitigation:**
-    *   If only one pool is affected, consider a manual failover to the healthy pool while you investigate the failed one. See [Manual Pool Switching](#manual-pool-switching) below.
+    *   If only one pool is affected, consider a manual failover to the healthy pool while you investigate the failed one.
     *   If both pools are affected, the priority is to restore service. This may require rolling back a recent deployment or fixing the underlying systemic issue.
 
 ---
