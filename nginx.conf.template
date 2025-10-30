@@ -3,13 +3,25 @@ events {
 }
 
 http {
+    log_format log_info '$remote_addr - $remote_user [$time_local] '
+                        '"$request" $status $body_bytes_sent '
+                        '"$http_referer" "$http_user_agent" '
+                        'pool=$sent_http_x_app_pool '
+                        'release=$sent_http_x_release_id '
+                        'upstream_status=$upstream_status '
+                        'upstream=$upstream_addr '
+                        'request_time=$request_time '
+                        'upstream_response_time=$upstream_response_time';
+
     upstream app_backend {
-        server blue_env:${PORT} max_fails=2 fail_timeout=2s;
-        server green_env:${PORT} backup;
+        server blue_env:8080 max_fails=2 fail_timeout=2s;
+        server green_env:8080 backup;
     }
 
     server {
         listen 80;
+
+        access_log /var/log/nginx/access.log log_info;
 
         location / {
             proxy_pass http://app_backend;

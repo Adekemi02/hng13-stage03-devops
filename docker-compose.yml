@@ -5,7 +5,7 @@ services:
   nginx:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.nginx
     ports:
       - "8080:80"
     environment:
@@ -13,6 +13,9 @@ services:
     depends_on:
       - blue_env
       - green_env
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/nginx.conf
+      - ./logs:/var/log/nginx
     networks:
       - app-network
 
@@ -38,6 +41,26 @@ services:
     networks:
       - app-network
 
+  alert_watcher:
+    build:
+      context: .
+      dockerfile: Dockerfile.watcher
+    environment:
+      - LOG_FILE_PATH=/var/log/nginx/access.log
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - ERROR_RATE_THRESHOLD=${ERROR_RATE_THRESHOLD:-2}
+      - WINDOW_SIZE=${WINDOW_SIZE:-200}
+      - ALERT_COOLDOWN_PERIOD=${ALERT_COOLDOWN_PERIOD}
+    depends_on: 
+      - nginx
+    volumes:
+      - ./logs:/var/log/nginx
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  nginx-logs:
